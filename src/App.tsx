@@ -100,7 +100,25 @@ export default function App() {
       clearTimeout(stepTimer2);
       clearTimeout(stepTimer3);
 
-      const data = await response.json();
+      let data: any = null;
+      const contentType = response.headers.get('content-type') || '';
+
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const rawText = await response.text();
+        if (!response.ok) {
+          if (response.status === 404 || rawText.includes('The page could not be found') || rawText.includes('NOT_FOUND')) {
+            throw new Error('Vercel API yönlendirme hatası (404): Vercel sunucusuz fonksiyonları yapılandırılıyor olabilir. Lütfen projenin güncel halini (vercel.json ve api/index.ts) Vercel\'e aktardığınızdan ve Vercel Settings > Environment Variables bölümüne GEMINI_API_KEY eklediğinizden emin olun.');
+          }
+          throw new Error(`Sunucu hatası (${response.status}): ${rawText.slice(0, 100)}`);
+        }
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error('Sunucudan geçerli bir JSON formatında yanıt alınamadı.');
+        }
+      }
 
       if (data.success && data.data) {
         const result: VideoAnalysisResult = data.data;

@@ -58,11 +58,15 @@ function getGeminiClient(): GoogleGenAI {
   });
 }
 
+// API Router supporting both direct and prefixed routes for Vercel & Express
+const apiRouter = express.Router();
+
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+apiRouter.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     hasApiKey: Boolean(process.env.GEMINI_API_KEY),
+    isVercel: Boolean(process.env.VERCEL),
     timestamp: new Date().toISOString()
   });
 });
@@ -102,7 +106,7 @@ function cleanAndParseJSON(rawText: string) {
  * POST /api/analyze-video
  * Analyzes video keyframes and finds similar viral content on the web using Google Search grounding
  */
-app.post('/api/analyze-video', async (req, res) => {
+apiRouter.post('/analyze-video', async (req, res) => {
   try {
     const {
       frames = [],
@@ -359,7 +363,7 @@ JSON şeması şu anahtarlara birebir uymalıdır:
  * POST /api/chat
  * Multi-turn AI Influencer Content Strategist Chat
  */
-app.post('/api/chat', async (req, res) => {
+apiRouter.post('/chat', async (req, res) => {
   try {
     const { messages = [], videoContext = null } = req.body;
     const ai = getGeminiClient();
@@ -435,7 +439,7 @@ Benzer İçerikler: ${(videoContext.similarContents || []).map((c: any) => c.tit
  * POST /api/search-trends
  * Search specifically for live internet trends, rival videos, or creators
  */
-app.post('/api/search-trends', async (req, res) => {
+apiRouter.post('/search-trends', async (req, res) => {
   try {
     const { query = 'viral reels trendleri' } = req.body;
     const ai = getGeminiClient();
@@ -492,6 +496,10 @@ Kısa, madde madde, influencerın hemen uygulayabileceği somut örnekler ve tre
   }
 });
 
+// Dual mounting: Supports both standard /api/path and Vercel rewritten /path
+app.use('/api', apiRouter);
+app.use(apiRouter);
+
 // Vite middleware setup
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
@@ -513,4 +521,10 @@ async function startServer() {
   });
 }
 
-startServer();
+// Only start standalone HTTP server when not in a Serverless environment like Vercel
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export { app, startServer };
+export default app;

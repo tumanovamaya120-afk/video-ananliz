@@ -41,7 +41,18 @@ export const TrendExplorerModal: React.FC<TrendExplorerModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: q }),
       });
-      const data = await res.json();
+      let data: any = null;
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const rawText = await res.text();
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = { success: false, text: null };
+        }
+      }
       if (data.success) {
         setResultsText(data.text);
         setSources(data.sources || []);

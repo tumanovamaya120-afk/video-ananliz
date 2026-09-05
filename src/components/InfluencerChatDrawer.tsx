@@ -81,7 +81,18 @@ export const InfluencerChatDrawer: React.FC<InfluencerChatDrawerProps> = ({
         }),
       });
 
-      const data = await response.json();
+      let data: any = null;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const rawText = await response.text();
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error('API servisi yanıt veremedi. Vercel üzerinde GEMINI_API_KEY ve fonksiyonların tanımlı olduğundan emin olun.');
+        }
+      }
       if (data.success && data.text) {
         const assistantMsg: ChatMessage = {
           id: `bot-${Date.now()}`,

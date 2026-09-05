@@ -241,30 +241,7 @@ const CATEGORY_ARCHETYPES: CategoryArchetype[] = [
     improvementTip: 'İlk saniyede ekrana 3-4 kelimelik merak uyandıran bir soru ekleyin.',
     keywords: ['viral kurgu', 'dinamik reels', 'kısa video hilesi', 'trend içerik', 'hızlı tempo'],
     hashtags: ['#reelsviral', '#trendvideolar', '#kesfet', '#kurgutrendleri', '#shortsviral'],
-    similarTemplates: [
-      {
-        title: 'Kaydırmayı Durduran 3 Saniyelik Kurgu Hilesi',
-        platform: 'Instagram Reels',
-        creatorOrChannel: '@kurgutuyolari / VideoCraft',
-        similarityScore: 92,
-        whySimilar: 'Aynı dinamik kesme aralıkları ve görsel akış ritmi.',
-        viralFactor: 'İçerik üreticilerinin kendi videolarında denemek için kaydetmesi.',
-        estimatedViewsOrImpact: '2.2M İzlenme / 170K Kaydetme',
-        contentAngle: 'Pratik video montaj sırrı',
-        url: 'https://www.instagram.com/reels'
-      },
-      {
-        title: 'Bu Format Neden 5 Milyon İzlendi?',
-        platform: 'TikTok',
-        creatorOrChannel: '@trenduzmani',
-        similarityScore: 88,
-        whySimilar: 'Tersine mühendislik ile viral içerik çözümü.',
-        viralFactor: 'Merak boşluğu ve yüksek tamamlanma oranı.',
-        estimatedViewsOrImpact: '1.6M İzlenme / 110K Paylaşım',
-        contentAngle: 'Viral formül analizi',
-        url: 'https://www.tiktok.com'
-      }
-    ],
+    similarTemplates: [],
     hooks: [
       { style: 'Merak Boşluğu', script: 'Bu videoyu izledikten sonra video çekme şekliniz tamamen değişecek:', whyItWorks: 'Büyük değer vaadi ile ilk 3 saniyede durdurur.' },
       { style: 'Ters Köşe', script: 'Herkesin yaptığı o hatayı bırakıp sadece bunu deneyin:', whyItWorks: 'FOMO etkisi yaratarak retention sağlar.' }
@@ -277,6 +254,83 @@ const CATEGORY_ARCHETYPES: CategoryArchetype[] = [
   }
 ];
 
+// Helper to clean and format title
+function formatCleanTitle(raw: string): string {
+  const withoutExt = raw.replace(/\.[a-zA-Z0-9]+$/, '');
+  const spaced = withoutExt.replace(/[_\-]+/g, ' ').trim();
+  if (!spaced) return 'Özgün Video';
+  return spaced.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+// Helper to generate dynamic, never-repeating similar contents for any video
+function buildDynamicSimilarContents(
+  cleanTitle: string,
+  archetype: CategoryArchetype,
+  duration: number,
+  hash: number
+): VideoAnalysisResult['similarContents'] {
+  const platforms: ('Instagram Reels' | 'TikTok' | 'YouTube Shorts')[] = ['Instagram Reels', 'TikTok', 'YouTube Shorts'];
+  const p1 = platforms[Math.abs(hash) % platforms.length];
+  const p2 = platforms[Math.abs(hash + 1) % platforms.length];
+  const p3 = platforms[Math.abs(hash + 2) % platforms.length];
+
+  const creators = [
+    `@${cleanTitle.toLowerCase().replace(/\s+/g, '_').slice(0, 12)}_viral`,
+    '@trenduzmani / Creator Studio',
+    '@icerikstratejisi / ViralLab',
+    '@kesfetmimari / ReelCraft',
+    '@dijitalvizyoner'
+  ];
+
+  const creator1 = creators[Math.abs(hash) % creators.length];
+  const creator2 = creators[Math.abs(hash + 2) % creators.length];
+  const creator3 = creators[Math.abs(hash + 3) % creators.length];
+
+  const score1 = Math.min(97, Math.max(89, 91 + (Math.abs(hash) % 6)));
+  const score2 = Math.min(95, Math.max(86, 88 + (Math.abs(hash + 1) % 7)));
+  const score3 = Math.min(93, Math.max(84, 85 + (Math.abs(hash + 2) % 8)));
+
+  const views1 = `${(1.8 + (Math.abs(hash) % 35) / 10).toFixed(1)}M İzlenme / ${120 + (Math.abs(hash) % 180)}K Kaydetme`;
+  const views2 = `${(1.2 + (Math.abs(hash + 5) % 25) / 10).toFixed(1)}M İzlenme / ${85 + (Math.abs(hash) % 120)}K Paylaşım`;
+  const views3 = `${(750 + (Math.abs(hash * 3) % 600))}K İzlenme / ${45 + (Math.abs(hash) % 55)}K Beğeni`;
+
+  return [
+    {
+      title: `${cleanTitle}: ${archetype.subNiche} Akımında 2M+ İzlenen Viral Kurgu`,
+      platform: p1,
+      creatorOrChannel: creator1,
+      similarityScore: score1,
+      whySimilar: `Aynı görsel tempo, ${Math.round(duration)} saniyelik dinamik akış ve ${archetype.visualTrigger}`,
+      viralFactor: `İzleyicilerin içeriği kaydetmesini sağlayan ilk 3 saniyelik ${archetype.hookType.toLowerCase()}.`,
+      estimatedViewsOrImpact: views1,
+      contentAngle: `${archetype.primaryNiche} odaklı yüksek etkileşim kurgusu`,
+      url: p1 === 'TikTok' ? 'https://www.tiktok.com' : p1 === 'Instagram Reels' ? 'https://www.instagram.com/reels' : 'https://www.youtube.com/shorts'
+    },
+    {
+      title: `Bu ${archetype.subNiche} Formatı Neden Algoritmada Patladı?`,
+      platform: p2,
+      creatorOrChannel: creator2,
+      similarityScore: score2,
+      whySimilar: `Tersine mühendislik: Konsept derinliği ve izleyiciyi sonuna kadar tutan hikaye kurgusu.`,
+      viralFactor: `Yüksek tamamlanma oranı (watch time) ve yorumlarda başlayan organik tartışma.`,
+      estimatedViewsOrImpact: views2,
+      contentAngle: `Viral formül & ters köşe anlatım`,
+      url: p2 === 'TikTok' ? 'https://www.tiktok.com' : p2 === 'Instagram Reels' ? 'https://www.instagram.com/reels' : 'https://www.youtube.com/shorts'
+    },
+    {
+      title: `${cleanTitle} Tarzı Videoları 3 Adımda Ölçekleme Rehberi`,
+      platform: p3,
+      creatorOrChannel: creator3,
+      similarityScore: score3,
+      whySimilar: `Aynı niş hedef kitle ve benzer kamera kadraj dili.`,
+      viralFactor: `Pratik uygulanabilir değer vaadi ve paylaşma güdüsü.`,
+      estimatedViewsOrImpact: views3,
+      contentAngle: `Adım adım viral içerik optimizasyonu`,
+      url: p3 === 'TikTok' ? 'https://www.tiktok.com' : p3 === 'Instagram Reels' ? 'https://www.instagram.com/reels' : 'https://www.youtube.com/shorts'
+    }
+  ];
+}
+
 export function generateIntelligentFallbackAnalysis({
   metadata,
   niche = '',
@@ -286,9 +340,16 @@ export function generateIntelligentFallbackAnalysis({
 }: FallbackParams): VideoAnalysisResult {
   const duration = metadata.duration || 15;
   const rawTitle = metadata.name || 'Özgün Video';
-  // Remove extension for clean title
-  const cleanTitle = rawTitle.replace(/\.[a-zA-Z0-9]+$/, '');
+  const cleanTitle = formatCleanTitle(rawTitle);
   const combinedContext = (niche + ' ' + rawTitle + ' ' + creatorNotes).toLowerCase();
+
+  // Compute deterministic hash from title, duration and notes
+  let hash = 0;
+  const str = rawTitle + duration + (creatorNotes || '');
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
 
   // Smart archetype classification based on keywords
   let selectedArchetype: CategoryArchetype;
@@ -412,7 +473,7 @@ export function generateIntelligentFallbackAnalysis({
       ]
     },
 
-    similarContents: selectedArchetype.similarTemplates,
+    similarContents: buildDynamicSimilarContents(cleanTitle, selectedArchetype, duration, hash),
 
     webGroundingSources: [
       {

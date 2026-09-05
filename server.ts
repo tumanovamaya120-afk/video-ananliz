@@ -369,7 +369,8 @@ JSON şeması:
     return res.json({
       success: true,
       data: fallbackResult,
-      isQuotaFallback: true
+      isQuotaFallback: true,
+      apiKeyMissing: !process.env.GEMINI_API_KEY
     });
   }
 });

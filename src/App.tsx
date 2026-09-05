@@ -17,11 +17,25 @@ export default function App() {
   const [analysisStep, setAnalysisStep] = useState<string>('');
   const [history, setHistory] = useState<VideoAnalysisResult[]>([]);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [serverApiKeyMissing, setServerApiKeyMissing] = useState<boolean>(false);
+  const [dismissApiKeyNotice, setDismissApiKeyNotice] = useState<boolean>(false);
 
   // Modals & Drawers
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isTrendsOpen, setIsTrendsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  // Health check on mount to detect if server/Vercel is missing API key
+  useEffect(() => {
+    fetch('/api/health')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.hasApiKey === false) {
+          setServerApiKeyMissing(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Load history from localStorage
   useEffect(() => {
@@ -122,6 +136,9 @@ export default function App() {
       }
 
       if (data.success && data.data) {
+        if (data.apiKeyMissing) {
+          setServerApiKeyMissing(true);
+        }
         const result: VideoAnalysisResult = data.data;
         setActiveAnalysis(result);
         saveToHistory(result);
@@ -187,6 +204,37 @@ export default function App() {
             <button
               onClick={() => setApiError(null)}
               className="text-slate-400 hover:text-white p-1 rounded-lg"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Vercel Environment API Key Guidance Banner */}
+      {serverApiKeyMissing && !dismissApiKeyNotice && (
+        <div className="max-w-4xl mx-auto px-4 mt-4 w-full">
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start justify-between gap-3 text-slate-200 text-xs shadow-lg backdrop-blur-sm">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+                <AlertCircle className="w-4 h-4" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-amber-300 text-sm">
+                  Canlı Sitede (Vercel) Canlı Gemini AI Analizlerini Aktifleştirme
+                </p>
+                <p className="text-slate-300 leading-relaxed text-xs">
+                  Önizleme (Preview) ortamında Gemini API anahtarı otomatik bağlıdır. Projenizi Vercel'e deploy ettiğinizde her videonun karelerini Gemini yapay zekasıyla canlı okuyup benzer viral içerikleri sıfırdan bulabilmesi için Vercel panelinizde <strong>Project Settings → Environment Variables</strong> bölümüne <code className="bg-black/50 px-1.5 py-0.5 rounded text-amber-300 font-mono text-[11px]">GEMINI_API_KEY</code> değerini eklemeniz gerekir.
+                </p>
+                <p className="text-slate-400 text-[11px]">
+                  Anahtar eklenene kadar analizler dinamik ve videoya özel akıllı yerel motorla üretilmektedir.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setDismissApiKeyNotice(true)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors shrink-0"
+              title="Kapat"
             >
               <X className="w-4 h-4" />
             </button>

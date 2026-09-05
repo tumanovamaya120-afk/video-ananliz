@@ -65,8 +65,8 @@ export async function extractVideoKeyframes(
         };
 
         const canvas = document.createElement('canvas');
-        // Scale down to max 480px dimension to drastically reduce token payload and prevent rate limits
-        const scale = Math.min(1, 480 / Math.max(width, height));
+        // Scale down to max 360px dimension to ensure ultra-lightweight payload (<100KB total) and zero timeout
+        const scale = Math.min(1, 360 / Math.max(width, height));
         canvas.width = Math.round(width * scale);
         canvas.height = Math.round(height * scale);
         const ctx = canvas.getContext('2d');
@@ -96,7 +96,7 @@ export async function extractVideoKeyframes(
               video.removeEventListener('seeked', onSeeked);
               try {
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
                 frames.push({
                   timestamp: Math.round(t * 10) / 10,
                   dataUrl

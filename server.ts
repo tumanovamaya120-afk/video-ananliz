@@ -141,66 +141,72 @@ apiRouter.post('/analyze-video', async (req, res) => {
       }
     }
 
-    // Comprehensive prompt for Influencer Video Deconstruction & Web Similarity Search
+    // Neutral, unbiased, vision-grounded prompt for Influencer Video Deconstruction & Web Similarity Search
     const promptText = `
-Sen dünya çapında tanınan bir Kısa Video & Influencer İçerik Stratejistisin (TikTok, Instagram Reels, YouTube Shorts uzmanı).
-Kullanıcı sana analiz etmen için bir video (ve video karelerini) iletti.
+Sen dünya çapında tanınan uzman bir Kısa Video & Influencer İçerik Stratejistisin (TikTok, Instagram Reels, YouTube Shorts uzmanı).
+Kullanıcı sana analiz etmen için gerçek bir video ve bu videodan çıkarılmış zaman damgalı kareleri (ekran görüntülerini) iletti.
 
 VİDEO BİLGİLERİ:
-- Dosya / Başlık: ${metadata.name || 'İsimsiz Video'}
+- Dosya / Başlık: ${metadata.name || 'Özgün Video'}
 - Süre: ${metadata.duration || 15} saniye
 - Çözünürlük: ${metadata.width || 1080}x${metadata.height || 1920}
 - Hedef Platform: ${targetPlatform || 'Instagram Reels, TikTok & Shorts'}
-- Belirtilen Niş / Kategori: ${niche || 'Görsellerden tespit et'}
-- Influencer Özel Notu: ${creatorNotes || 'Genel viral potansiyel ve benzer videoları bul'}
+- Belirtilen Niş / Kategori: ${niche || 'Video karelerinden doğrudan tespit et'}
+- Influencer Özel Notu: ${creatorNotes || 'Bu videonun konusuna ve kurgu stiline özel analiz yap'}
+
+KRİTİK TALİMAT - VİDEOYU GÖREREK ANALİZ ET:
+1. Sana verilen görsel kareleri dikkatle incele. Videoda ne görüyorsun? İnsanlar, mimikler, eylemler, ortam, nesneler, metinler neler?
+2. Konu neyse (Örnekler: Yemek tarifi, spor/fitness, dans, sokak röportajı, seyahat, komedi, oyun, araba, moda/makyaj, eğitim, iş/girişimcilik, evcil hayvan, vlog vb.) %100 O KONUYA ÖZEL analiz yap.
+3. KESİNLİKLE sabit veya ezbere şablon (örn. masa düzeni, kablo gizleme) üretme! Eğer video yemekle ilgiliyse yemek içerikleri, sporla ilgiliyse spor içerikleri, danstan bahsediyorsa dans trendleri öner.
+4. "similarContents" (benzer içerikler) listesinde, internette bu konsept ve tarzdaki gerçek viral içerik formatlarını, popüler rakip hesap/kanal örneklerini ve benzer akımları listele.
 
 GÖREVLERİN:
 1. VİDEOYU DERİNDEN ÇÖZÜMLE:
-   - İlk 3-5 saniyelik "Hook" (Kanca) gücünü, görsel ve sözel tetikleyicilerini puanla (1-10) ve değerlendir.
+   - İlk 3 saniyelik "Hook" (Kanca) gücünü, görsel ve sözel tetikleyicilerini puanla (1-10) ve değerlendir.
    - Görsel kurgu temposunu (Pacing), kamera hareketlerini, ışık/estetik dilini ve metin yerleşimlerini açıkla.
    - Anlatı yapısını adım adım (Zaman damgası, evre, açıklama) çıkar.
    - Viralite faktörlerini (Paylaşılabilirlik, Kaydedilebilirlik, Yorum tetikleyicisi) puanla.
 
-2. İNTERNETTE BENZER VE TREND İÇERİKLERİ BUL (Google Search ile canlı araştır):
-   - Bu video formatına, görsel tarzına ve konusuna en çok benzeyen güncel viral video konseptlerini, rakip influencer/kanal örneklerini ve TikTok/Reels akımlarını internette ara.
-   - En az 4-6 adet çok spesifik benzer içerik tespit et. Her biri için: başlık, platform (TikTok, Instagram Reels, YouTube Shorts), benzerlik oranı (%60-98 arası), neden benzediği, viralite sırrı, tahmini etki ve içerik açısını belirt.
+2. İNTERNETTE BENZER VE TREND İÇERİKLERİ LİSTELE:
+   - Bu videonun görsel tarzına ve konusuna en çok benzeyen güncel viral video konseptlerini, rakip influencer/kanal örneklerini ve TikTok/Reels akımlarını belirle.
+   - En az 3-5 adet çok spesifik benzer içerik tespit et. Her biri için: başlık, platform (TikTok, Instagram Reels, YouTube Shorts), benzerlik oranı (%60-98 arası), neden benzediği, viralite sırrı, tahmini etki ve içerik açısını belirt.
    - Varsa bulunan web/video URL linklerini ve trend arama sorgularını da ekle.
 
 3. INFLUENCER İÇİN REKABET VE REPLİKASYON REHBERİ (PLAYBOOK):
-   - Bu formatı kullanarak influencer'ın hemen çekebileceği 3 farklı çarpıcı alternatif Hook (Kanca) senaryosu (Kelimesi kelimesine konuşma metni + neden işe yaradığı).
-   - Bu konseptin üzerine inşa edilecek 5 yeni viral video fikri.
+   - Bu video konusuna uygun 3 farklı çarpıcı alternatif Hook (Kanca) senaryosu (Kelimesi kelimesine konuşma metni + neden işe yaradığı).
+   - Bu konseptin üzerine inşa edilecek yeni viral video fikirleri.
    - İnternetteki benzer videolardan ayrışması ve öne geçmesi için 1 altın kural ("Differentiator Advice").
    - En uygun paylaşım saatleri, trend ses türü ve hashtag önerileri.
 
 ÇIKTI FORMATI:
 Yanıtını SADECE geçerli bir JSON objesi olarak ver. Markdown kod bloğu (\`\`\`json ... \`\`\`) veya doğrudan JSON formatında olabilir.
-JSON şeması şu anahtarlara birebir uymalıdır:
+JSON şeması:
 {
-  "primaryNiche": "string (örn: Teknoloji & Masa Düzeni)",
-  "subNiche": "string (örn: Minimalist Verimlilik & Estetik B-Roll)",
-  "overallScore": 87,
-  "summary": "string (Videoya genel profesyonel eleştirel bakış ve güçlü yönleri)",
+  "primaryNiche": "Videodan tespit edilen ana niş (Örn: Yemek & Mutfak, Fitness, Komedi, Moda, Seyahat vb.)",
+  "subNiche": "Videodan tespit edilen alt niş veya kurgu formatı",
+  "overallScore": 86,
+  "summary": "Bu videonun görsel içeriğine ve kurgusuna özel profesyonel eleştirel değerlendirme...",
   "hookAnalysis": {
-    "hookType": "string (örn: Görsel Şok Kancası / Merak Boşluğu / Problem-Çözüm)",
+    "hookType": "Videonun açılışındaki kanca türü",
     "ratingOutOf10": 8.5,
-    "first3SecondsReview": "string (İlk 3 saniyenin detaylı analizi)",
-    "visualRetentionTrigger": "string (Ekranda gözü tutan unsur)",
-    "audioHookDescription": "string (Ses/Müzik/Dış ses kancası)",
-    "improvementTip": "string (Hook nasıl %30 daha güçlü hale getirilir?)"
+    "first3SecondsReview": "İlk 3 saniyede izleyiciyi durduran veya kaçıran görsel/işitsel durum analizi",
+    "visualRetentionTrigger": "Ekranda gözü tutan görsel öğe",
+    "audioHookDescription": "Videonun ses veya ritim dinamikleri",
+    "improvementTip": "Kancayı %30 daha güçlü hale getirecek somut tavsiye"
   },
   "styleBreakdown": {
-    "visualPacing": "string (Kurgu ritmi, kesme hızları)",
-    "cameraWork": "string (Açılar, yakın planlar, lens)",
-    "lightingAndColor": "string (Renk paleti, kontrast)",
-    "textOverlays": "string (Altyazı, yazı tipi, çıkartma kullanımı)",
-    "audioEnergy": "string (Arka plan müziği, SFX, enerji seviyesi)"
+    "visualPacing": "Kurgu hızı, kesme aralıkları",
+    "cameraWork": "Kamera açıları ve hareket dili",
+    "lightingAndColor": "Renk paleti ve aydınlatma",
+    "textOverlays": "Ekrana binen metin/altyazı kullanımı",
+    "audioEnergy": "Müzik, dış ses ve enerji seviyesi"
   },
   "narrativeStructure": {
-    "format": "string (örn: Problem -> Mini Teaser -> 3 Adımlı Çözüm -> CTA)",
+    "format": "Örn: Giriş/Kanca -> Gelişme/Değer -> Çözüm/CTA",
     "steps": [
       { "time": "00:00 - 00:03", "phase": "Kanca (Hook)", "description": "..." },
       { "time": "00:03 - 00:09", "phase": "Gelişme", "description": "..." },
-      { "time": "00:09 - 00:15", "phase": "Sonuç & Çözüm", "description": "..." }
+      { "time": "00:09 - 00:15", "phase": "Sonuç & CTA", "description": "..." }
     ]
   },
   "viralityMetrics": {
@@ -208,50 +214,40 @@ JSON şeması şu anahtarlara birebir uymalıdır:
     "saveability": 9,
     "commentBaitPotential": 7,
     "watchTimePotential": 9,
-    "psychologicalTriggers": ["Merak Boşluğu", "Estetik Doyum (ASMR)", "Kaydetme İhtiyacı"]
+    "psychologicalTriggers": ["Merak Boşluğu", "Görsel Doyum", "Kaydetme İhtiyacı"]
   },
   "similarContents": [
     {
-      "title": "Benzer Video veya Trend Başlığı",
-      "platform": "TikTok",
-      "creatorOrChannel": "Örnek İçerik Üreticisi",
+      "title": "Videoyla doğrudan ilişkili benzer viral içerik başlığı",
+      "platform": "Instagram Reels",
+      "creatorOrChannel": "Örnek kanal/içerik üreticisi",
       "similarityScore": 92,
-      "whySimilar": "Aynı B-Roll geçişleri ve minimalist ürün yerleşimi kurgusu kullanılıyor.",
-      "viralFactor": "Yorumlarda ürünlerin nereden alındığının sorulması (etkileşim patlaması).",
-      "estimatedViewsOrImpact": "1.2M+ Görüntülenme / 85K Kaydetme",
-      "contentAngle": "Masa düzeninde kablo saklama hilesi",
-      "url": "https://www.tiktok.com"
+      "whySimilar": "Bu video ile kurgu, kadraj veya konu benzerliği...",
+      "viralFactor": "Bu içeriği viral yapan temel dinamik...",
+      "estimatedViewsOrImpact": "1.5M+ Görüntülenme / 120K Kaydetme",
+      "contentAngle": "İçeriğin ele alınış açısı",
+      "url": "https://www.instagram.com/reels"
     }
   ],
-  "trendingKeywords": ["desk setup", "minimalist workspace", "productivity aesthetic"],
-  "trendingHashtags": ["#desksetup", "#techreels", "#aesthetic", "#cleansetup"],
+  "trendingKeywords": ["videoyla ilgili anahtar kelime 1", "anahtar kelime 2"],
+  "trendingHashtags": ["#videoylaIlgili1", "#hashtag2"],
   "creatorPlaybook": {
     "alternativeHooks": [
       {
         "style": "Merak Uyandırıcı (Curiosity Gap)",
-        "script": "Masanızda bunu yapıyorsanız hemen durun, çünkü...",
-        "whyItWorks": "Kullanıcıda yanlış bir şey yaptığı korkusu (FOMO) yaratıp durdurur."
-      },
-      {
-        "style": "Ters Köşe (Counter-Intuitive)",
-        "script": "Pahalı ekipman almadan önce sadece 50 TL'ye masamı nasıl değiştirdim?",
-        "whyItWorks": "Düşük bütçeli pratik çözümler her zaman yüksek kaydetme alır."
-      },
-      {
-        "style": "Doğrudan Değer Vaadi",
-        "script": "İşte çalışma odamda verimimi 2 katına çıkaran 3 gizli detay...",
-        "whyItWorks": "Net sayı ve doğrudan fayda odaklı kanca."
+        "script": "Bu video konusuna özel kelimesi kelimesine kanca metni...",
+        "whyItWorks": "Neden çalıştığının psikolojik açıklaması"
       }
     ],
     "nextVideoIdeas": [
       {
-        "title": "İkinci Bölüm: Kablo Gizleme Hileleri",
-        "concept": "Masanın altındaki kaosu 3 dakikada çözme rehberi",
-        "predictedFormat": "Hızlı time-lapse + ASMR sesler"
+        "title": "Sonraki video fikri başlığı",
+        "concept": "Konsept detayı",
+        "predictedFormat": "Önerilen kurgu formatı"
       }
     ],
-    "differentiatorAdvice": "Bu kategorideki videolar genellikle çok steril kalıyor. Sen kendi sesinle samimi bir yorum veya ufak bir espri katarak diğerlerinden ayrış.",
-    "bestTimeToPostAndAudioTips": "Hafta içi 18:00 - 21:00 arası; düşük tempolu lo-fi veya ritmik baslı popüler Reels sesleri."
+    "differentiatorAdvice": "Rakiplerden ayrışmak için altın tavsiye",
+    "bestTimeToPostAndAudioTips": "İdeal paylaşım saatleri ve ses önerisi"
   }
 }
 `;
@@ -259,34 +255,51 @@ JSON şeması şu anahtarlara birebir uymalıdır:
     parts.push({ text: promptText });
 
     let response: any = null;
-    let usedModel = 'gemini-3.1-flash-lite';
+    let usedModel = 'gemini-3.8-flash';
     let quotaHit = false;
 
-    // Primary: gemini-3.1-flash-lite (fastest, high token allowance, reliable)
+    // Primary: gemini-3.8-flash (Top-tier vision reasoning & multimodal understanding)
     try {
       response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite',
+        model: 'gemini-3.8-flash',
         contents: { parts },
         config: {
           temperature: 0.7,
         },
       });
-      usedModel = 'gemini-3.1-flash-lite';
+      usedModel = 'gemini-3.8-flash';
     } catch (err: any) {
       if (isQuotaError(err)) quotaHit = true;
-      // Secondary: gemini-3.8-flash
+      console.warn('gemini-3.8-flash denemesi başarısız, gemini-flash-latest deneniyor:', err?.message || err);
+      // Secondary: gemini-flash-latest
       try {
         response = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'gemini-flash-latest',
           contents: { parts },
           config: {
             temperature: 0.7,
           },
         });
-        usedModel = 'gemini-3.8-flash';
+        usedModel = 'gemini-flash-latest';
         quotaHit = false;
       } catch (err2: any) {
         if (isQuotaError(err2)) quotaHit = true;
+        console.warn('gemini-flash-latest denemesi başarısız, gemini-3.1-flash-lite deneniyor:', err2?.message || err2);
+        // Tertiary: gemini-3.1-flash-lite
+        try {
+          response = await ai.models.generateContent({
+            model: 'gemini-3.1-flash-lite',
+            contents: { parts },
+            config: {
+              temperature: 0.7,
+            },
+          });
+          usedModel = 'gemini-3.1-flash-lite';
+          quotaHit = false;
+        } catch (err3: any) {
+          if (isQuotaError(err3)) quotaHit = true;
+          console.error('Tüm Gemini modelleri tükendi veya hata verdi:', err3?.message || err3);
+        }
       }
     }
 

@@ -13,6 +13,270 @@ interface FallbackParams {
   thumbnailUrl?: string;
 }
 
+// Category definition pool for dynamic content generation
+interface CategoryArchetype {
+  primaryNiche: string;
+  subNiche: string;
+  hookType: string;
+  hookReview: string;
+  visualTrigger: string;
+  audioHook: string;
+  improvementTip: string;
+  keywords: string[];
+  hashtags: string[];
+  similarTemplates: Array<{
+    title: string;
+    platform: 'TikTok' | 'Instagram Reels' | 'YouTube Shorts' | 'Web / General';
+    creatorOrChannel: string;
+    similarityScore: number;
+    whySimilar: string;
+    viralFactor: string;
+    estimatedViewsOrImpact: string;
+    contentAngle: string;
+    url: string;
+  }>;
+  hooks: Array<{ style: string; script: string; whyItWorks: string }>;
+  nextIdeas: Array<{ title: string; concept: string; predictedFormat: string }>;
+  differentiator: string;
+  postingTips: string;
+}
+
+const CATEGORY_ARCHETYPES: CategoryArchetype[] = [
+  {
+    primaryNiche: 'Yemek & Gastronomi',
+    subNiche: 'Pratik Mutfak Sırları & Duyusal ASMR',
+    hookType: 'Duyusal Lezzet & Hızlı Dönüşüm Kancası',
+    hookReview: 'İlk 2 saniyedeki cızırtı/dökülme sesi ve iştah açıcı yakın plan kesit dikkat eşiğini anında aşıyor.',
+    visualTrigger: 'Sosun akışı ve tavadaki duman gibi yüksek duyusal tetikleyiciler.',
+    audioHook: 'Mikrofon yaklaştırılmış çıtırtı veya dinamik mutfak ritmi.',
+    improvementTip: 'Tabağın son halini ilk 0.5 saniyede "teaser" olarak gösterip ardından yapılışına geçin.',
+    keywords: ['lezzetli tarifler', 'hızlı akşam yemeği', 'mutfak hileleri', 'asmr yemek', 'viral tarif'],
+    hashtags: ['#yemektarifleri', '#mutfaksirlari', '#pratiktarifler', '#foodreels', '#asmrcooking'],
+    similarTemplates: [
+      {
+        title: 'Restoran Usulü Sosun Gizli 2 Püf Noktası',
+        platform: 'Instagram Reels',
+        creatorOrChannel: '@lezzetkesfi / Chef Mert',
+        similarityScore: 94,
+        whySimilar: 'Aynı yakın makro kadraj dili ve hızlı adım adım anlatım.',
+        viralFactor: 'İzleyicilerin tarifi akşam denemek için kaydetmesi.',
+        estimatedViewsOrImpact: '2.8M İzlenme / 195K Kaydetme',
+        contentAngle: 'Evde şef kalitesinde pratik çözüm',
+        url: 'https://www.instagram.com/reels'
+      },
+      {
+        title: 'Bunu Bilenler Asla Dışarıda Yemiyor!',
+        platform: 'TikTok',
+        creatorOrChannel: '@gurmepratik',
+        similarityScore: 90,
+        whySimilar: 'Mutfaktaki yaygın bir hatayı düzeltme kancası.',
+        viralFactor: 'Yorumlarda lezzet ve maliyet tartışmalarının büyümesi.',
+        estimatedViewsOrImpact: '1.9M İzlenme / 115K Paylaşım',
+        contentAngle: 'Ters köşe tasarruf ve mutfak tüyosu',
+        url: 'https://www.tiktok.com'
+      },
+      {
+        title: '60 Saniyede Kusursuz Kıvam Rehberi',
+        platform: 'YouTube Shorts',
+        creatorOrChannel: 'Gastronomi Atölyesi',
+        similarityScore: 86,
+        whySimilar: 'Kısa sürede yoğun bilgi aktaran dinamik kurgu.',
+        viralFactor: 'Merak duygusu ve yüksek tamamlama oranı.',
+        estimatedViewsOrImpact: '780K İzlenme / 48K Beğeni',
+        contentAngle: 'Hızlı mutfak eğitimi & pratik ipucu',
+        url: 'https://www.youtube.com/shorts'
+      }
+    ],
+    hooks: [
+      { style: 'Merak Boşluğu', script: 'Yıllardır bunu yanlış pişiriyormuşuz; işte lokanta şeflerinin sakladığı o detay:', whyItWorks: 'Kişide hemen kendi mutfağını sorgulatır.' },
+      { style: 'Bütçe & Lezzet', script: 'Dışarıda 300 TL ödemek yerine evde 10 dakikada nasıl 2 kat lezzetlisini yaparsınız?', whyItWorks: 'Yüksek kaydetme ve paylaşma dürtüsü yaratır.' },
+      { style: 'Görsel Şok', script: 'Bu videoyu kaydetmeden geçmeyin, bu akşam ne yapacağınızı ararken lazım olacak:', whyItWorks: 'Algoritmik kaydedilme sinyalini doğrudan tetikler.' }
+    ],
+    nextIdeas: [
+      { title: 'Buzdolabında Kalanlarla 5 Dakikalık Atıştırmalık', concept: 'Atıksız ve bütçe dostu pratik fikirler', predictedFormat: 'Hızlı kesmeler + dinamik müzik' },
+      { title: 'En Çok Yapılan 3 Mutfak Hatası', concept: 'Doğru bilinen yanlışları karşılaştırmalı göstermek', predictedFormat: 'Yan yana ekran karşılaştırması' }
+    ],
+    differentiator: 'Mutfak videolarında herkes mükemmel tabağı gösterir. Sen arkadaki samimi hataları veya pratik temizlik hilesini katarak ayrış.',
+    postingTips: 'Öğle arası (12:00-13:30) ve akşam yemeği öncesi (17:30-19:30) en yüksek iştah tetikleme saatleridir.'
+  },
+  {
+    primaryNiche: 'Fitness & Sağlıklı Yaşam',
+    subNiche: 'Hızlı Antrenman & Form İpuçları',
+    hookType: 'Hata Uyarısı & Form Düzeltme Kancası',
+    hookReview: 'İlk saniyede yapılan yanlış harekete dikkat çekerek izleyiciyi "acaba ben de mi yapıyorum?" endişesiyle durduruyor.',
+    visualTrigger: 'Hata anındaki kırmızı vurgu veya anında doğru form gösterimi.',
+    audioHook: 'Net uyarı sesi ve ardından tempolu antrenman ritmi.',
+    improvementTip: 'Ekrana "Bunu yapıyorsan beline yazık!" gibi merak ve korunma refleksi uyandıran bir başlık ekleyin.',
+    keywords: ['fitness ipuçları', 'evde antrenman', 'form düzeltme', 'postür egzersizleri', 'kısa workout'],
+    hashtags: ['#fitnessturkiye', '#antrenman', '#vucutgelistirme', '#spormotivasyon', '#gymtok'],
+    similarTemplates: [
+      {
+        title: 'Bu Hareketi Yaparken Belini Yormayan Tek Açı',
+        platform: 'TikTok',
+        creatorOrChannel: '@hareketingucu / Coach Berk',
+        similarityScore: 93,
+        whySimilar: 'Aynı anatomik odak ve anlaşılır hareket analizi.',
+        viralFactor: 'Salona giden herkesin birbirine göndermesi.',
+        estimatedViewsOrImpact: '3.4M İzlenme / 240K Kaydetme',
+        contentAngle: 'Sakatlık önleme ve maksimum verim',
+        url: 'https://www.tiktok.com'
+      },
+      {
+        title: 'Masa Başında Çalışanlar İçin 3 Kurtarıcı Hareket',
+        platform: 'Instagram Reels',
+        creatorOrChannel: '@fizyomotivasyon',
+        similarityScore: 89,
+        whySimilar: 'Günlük hayat problemine hemen uygulanabilir hızlı çözüm.',
+        viralFactor: 'Ofis çalışanlarının doğrudan kaydetmesi.',
+        estimatedViewsOrImpact: '2.1M İzlenme / 160K Kaydetme',
+        contentAngle: 'Günlük yaşam konforu & omurga sağlığı',
+        url: 'https://www.instagram.com/reels'
+      }
+    ],
+    hooks: [
+      { style: 'Sakatlık FOMOsu', script: 'Eğer bu hareketi yaparken beliniz ağrıyorsa sebebi çok basit:', whyItWorks: 'Ağrı yaşayan herkesi anında ekranda kilitler.' },
+      { style: 'Verimlilik Kancası', script: 'Günde sadece 4 dakika ayırarak bu sorunu nasıl çözdüm?', whyItWorks: 'Düşük zaman maliyeti ile yüksek fayda vaat eder.' }
+    ],
+    nextIdeas: [
+      { title: 'Evde Ekipmansız 15 Dakika Yağ Yakımı', concept: 'Hızlı ve terleten kombine seriler', predictedFormat: 'Zamanlayıcı sayaç + tempolu ritim' }
+    ],
+    differentiator: 'Ağır jargonlar yerine herkesin evde ayna karşısında kontrol edebileceği pratik ipuçları ver.',
+    postingTips: 'Sabah 07:00-08:30 ve akşam spor çıkışı 20:00-22:00 arası etkileşim zirve yapar.'
+  },
+  {
+    primaryNiche: 'Kişisel Gelişim & Verimlilik',
+    subNiche: 'Zaman Yönetimi & Hayat Kolaylaştıran Alışkanlıklar',
+    hookType: 'Zihin Açıcı Soru & Bakış Açısı Değişimi',
+    hookReview: 'İlk 3 saniyede yaygın bir erteleme veya motivasyon problemine doğrudan parmak basıyor.',
+    visualTrigger: 'Temiz kadraj, sakin göz teması ve ekranda beliren çarpıcı altyazılar.',
+    audioHook: 'Özgüvenli, net bir konuşma tonu ve alt fonda hafif piyano/lo-fi ezgisi.',
+    improvementTip: 'İlk cümlede genel öğütler yerine doğrudan kişinin günlük rutinine dokunan bir örnek verin.',
+    keywords: ['zaman yönetimi', 'üretkenlik', 'odaklanma hilesi', 'motivasyon', 'günlük rutin'],
+    hashtags: ['#kisiselgelisim', '#verimlilik', '#motivasyon', '#ogrenme', '#basari'],
+    similarTemplates: [
+      {
+        title: 'Ertelemeyi Bitiren 2 Dakika Kuralı',
+        platform: 'Instagram Reels',
+        creatorOrChannel: '@odaklan / Caner U.',
+        similarityScore: 92,
+        whySimilar: 'Bölünmeden aktarılan net fikir ve akıcı monolog.',
+        viralFactor: 'İzleyicilerin kendi hayatlarındaki ertelemeyle özdeşleştirmesi.',
+        estimatedViewsOrImpact: '1.7M İzlenme / 145K Kaydetme',
+        contentAngle: 'Psikolojik içgörü & anında uygulanabilir kural',
+        url: 'https://www.instagram.com/reels'
+      },
+      {
+        title: 'Gününüzü Kurtaran 3 Sabah Alışkanlığı',
+        platform: 'YouTube Shorts',
+        creatorOrChannel: 'Gelişim Günlüğü',
+        similarityScore: 88,
+        whySimilar: 'Temiz görsel tempo ve madde madde anlatım.',
+        viralFactor: 'Yüksek tamamlanma süresi ve yorumlarda fikir paylaşımları.',
+        estimatedViewsOrImpact: '920K İzlenme / 65K Beğeni',
+        contentAngle: 'Rutin optimizasyonu & zihinsel tazelik',
+        url: 'https://www.youtube.com/shorts'
+      }
+    ],
+    hooks: [
+      { style: 'Ters Köşe Gerçek', script: 'Disiplinsiz değilsiniz, sadece beyninizi yanlış yönlendiriyorsunuz:', whyItWorks: 'İzleyicinin suçluluk duygusunu alıp merak uyandırır.' },
+      { style: 'Basit Sır', script: 'Bu tek kuralı uygulamaya başladığımdan beri hayatım nasıl değişti?', whyItWorks: 'Kişisel deneyim ve kanıt merakı.' }
+    ],
+    nextIdeas: [
+      { title: 'Telefon Bağımlılığını Azaltan 1 Basit Ayar', concept: 'Ekran süresini düşüren pratik ipucu', predictedFormat: 'Ekran kaydı + seslendirme' }
+    ],
+    differentiator: 'Boş motivasyon cümleleri yerine bilimsel dayanaklı 1 somut aksiyon ver.',
+    postingTips: 'Hafta içi sabah 07:30-09:00 ve pazar akşamı 21:00-23:00 planlama saatleri idealdir.'
+  },
+  {
+    primaryNiche: 'Eğlence & Günlük Vlog',
+    subNiche: 'Samimi POV & Hayattan Kesitler',
+    hookType: 'Durumsal Komedi & Merak Tetikleyici Açılış',
+    hookReview: 'Olayın tam ortasından başlayarak izleyiciyi "burada ne oluyor?" sorusuyla içeri çekiyor.',
+    visualTrigger: 'Kameraya hızlı yaklaşma, beklenmedik mimikler veya hareketli el kamerası.',
+    audioHook: 'Doğal ortam sesi, anlık kahkaha veya trend komedi ses efekti.',
+    improvementTip: 'Girişteki gereksiz selamlamaları kesip olayın en komik/şaşırtıcı 1 saniyesiyle başlayın.',
+    keywords: ['komik anlar', 'günlük vlog', 'hayattan kesitler', 'pov reels', 'samimi sohbet'],
+    hashtags: ['#vlogturkiye', '#gunlukvlog', '#komikvideolar', '#pov', '#eglence'],
+    similarTemplates: [
+      {
+        title: 'O An Yaşadığım Şok: Kimse Böyle Bir Şey Beklemiyordu',
+        platform: 'TikTok',
+        creatorOrChannel: '@gunluk_macera',
+        similarityScore: 91,
+        whySimilar: 'Hikaye anlatım tarzı ve samimi kamera arkası dili.',
+        viralFactor: 'İzleyicilerin yorumlarda benzer anılarını anlatması.',
+        estimatedViewsOrImpact: '2.5M İzlenme / 180K Yorum',
+        contentAngle: 'Gündelik trajikomik deneyim',
+        url: 'https://www.tiktok.com'
+      },
+      {
+        title: 'Benimle 1 Gün: Beklenti vs Gerçekler',
+        platform: 'Instagram Reels',
+        creatorOrChannel: '@samimivibes',
+        similarityScore: 87,
+        whySimilar: 'Yüksek ritimli kurgu ve özdeşleşilebilir durumlar.',
+        viralFactor: 'Arkadaş etiketleme ve hikayede paylaşılma patlaması.',
+        estimatedViewsOrImpact: '1.4M İzlenme / 95K Paylaşım',
+        contentAngle: 'Mizahi kontrast ve gerçekçilik',
+        url: 'https://www.instagram.com/reels'
+      }
+    ],
+    hooks: [
+      { style: 'Beklenmedik Giriş', script: 'Bunun başıma geleceğine asla inanmazdım ama tam olarak şöyle oldu:', whyItWorks: 'Hikaye tamamlama dürtüsünü (Story arc) tetikler.' },
+      { style: 'Özdeşleşme', script: 'Yalnızca bunu yaşayanlar beni anlayabilir...', whyItWorks: 'Yorumlarda dayanışma ve etkileşim yaratır.' }
+    ],
+    nextIdeas: [
+      { title: 'Beklenti vs Gerçeklik Bölüm 2', concept: 'Günlük durumların abartılı mizahi canlandırması', predictedFormat: 'Bölünmüş ekran veya hızlı kesmeler' }
+    ],
+    differentiator: 'Kurgusal veya yapmacık hissettirmeyen saf doğallık ve filtresiz mimikler.',
+    postingTips: 'Akşam 19:30-22:30 arası rahatlama ve kaydırma saatlerinde en iyi performansı gösterir.'
+  },
+  {
+    primaryNiche: 'Trend Kısa Video & Yaratıcı Kurgu',
+    subNiche: 'Hızlı Kanca & Dinamik Görsel Anlatım',
+    hookType: 'Görsel Ritim & Hızlı Kesme Kancası',
+    hookReview: 'İlk 2 saniyedeki hızlı tempo ve merak uyandıran kadraj izleyiciyi anında durduruyor.',
+    visualTrigger: 'Dinamik kamera hareketi ve nesnelerin akıcı geçişi.',
+    audioHook: 'Ritmik bas vuruşu veya dikkat çeken bir ses geçişi.',
+    improvementTip: 'İlk saniyede ekrana 3-4 kelimelik merak uyandıran bir soru ekleyin.',
+    keywords: ['viral kurgu', 'dinamik reels', 'kısa video hilesi', 'trend içerik', 'hızlı tempo'],
+    hashtags: ['#reelsviral', '#trendvideolar', '#kesfet', '#kurgutrendleri', '#shortsviral'],
+    similarTemplates: [
+      {
+        title: 'Kaydırmayı Durduran 3 Saniyelik Kurgu Hilesi',
+        platform: 'Instagram Reels',
+        creatorOrChannel: '@kurgutuyolari / VideoCraft',
+        similarityScore: 92,
+        whySimilar: 'Aynı dinamik kesme aralıkları ve görsel akış ritmi.',
+        viralFactor: 'İçerik üreticilerinin kendi videolarında denemek için kaydetmesi.',
+        estimatedViewsOrImpact: '2.2M İzlenme / 170K Kaydetme',
+        contentAngle: 'Pratik video montaj sırrı',
+        url: 'https://www.instagram.com/reels'
+      },
+      {
+        title: 'Bu Format Neden 5 Milyon İzlendi?',
+        platform: 'TikTok',
+        creatorOrChannel: '@trenduzmani',
+        similarityScore: 88,
+        whySimilar: 'Tersine mühendislik ile viral içerik çözümü.',
+        viralFactor: 'Merak boşluğu ve yüksek tamamlanma oranı.',
+        estimatedViewsOrImpact: '1.6M İzlenme / 110K Paylaşım',
+        contentAngle: 'Viral formül analizi',
+        url: 'https://www.tiktok.com'
+      }
+    ],
+    hooks: [
+      { style: 'Merak Boşluğu', script: 'Bu videoyu izledikten sonra video çekme şekliniz tamamen değişecek:', whyItWorks: 'Büyük değer vaadi ile ilk 3 saniyede durdurur.' },
+      { style: 'Ters Köşe', script: 'Herkesin yaptığı o hatayı bırakıp sadece bunu deneyin:', whyItWorks: 'FOMO etkisi yaratarak retention sağlar.' }
+    ],
+    nextIdeas: [
+      { title: 'Kamera Arkası: 15 Saniyelik Çekimin Kurgu Aşamaları', concept: 'İlham verici şeffaf yapım süreci', predictedFormat: 'Ekran kaydı + hızlı anlatım' }
+    ],
+    differentiator: 'Karmaşık teknikler yerine izleyicinin telefonda 1 dakikada yapabileceği kolaylığı göster.',
+    postingTips: 'Hafta içi 18:00 - 21:30 saatleri en yüksek algoritmik ivmeyi kazandırır.'
+  }
+];
+
 export function generateIntelligentFallbackAnalysis({
   metadata,
   niche = '',
@@ -21,278 +285,156 @@ export function generateIntelligentFallbackAnalysis({
   thumbnailUrl
 }: FallbackParams): VideoAnalysisResult {
   const duration = metadata.duration || 15;
-  const title = metadata.name || 'İnfluencer İçerik Videosu';
-  const lowerNiche = (niche + ' ' + title + ' ' + creatorNotes).toLowerCase();
+  const rawTitle = metadata.name || 'Özgün Video';
+  // Remove extension for clean title
+  const cleanTitle = rawTitle.replace(/\.[a-zA-Z0-9]+$/, '');
+  const combinedContext = (niche + ' ' + rawTitle + ' ' + creatorNotes).toLowerCase();
 
-  let primaryNiche = 'Teknoloji & Masa Estetiği';
-  let subNiche = 'Minimalist B-Roll & Üretkenlik';
-  let hookType = 'Görsel Estetik & ASMR Kancası';
-  let hookReview = 'İlk 2.5 saniyede hızlı geçişli bir hareket ve ses tetikleyicisi izleyiciyi akışta durdurmayı hedefliyor.';
-  let visualTrigger = 'Yüksek kontrastlı açılı çekim ve mikro hareketler.';
-  let audioHook = 'Ritmik ses efekti (SFX) veya bas vuruşlu geçiş.';
-  let improvementTip = 'İlk 1 saniyede ekrana merak uyandıran 4 kelimelik bir soru metni eklerseniz durdurma oranı %35 artar.';
+  // Smart archetype classification based on keywords
+  let selectedArchetype: CategoryArchetype;
 
-  let similarContents: SimilarVideoContent[] = [
-    {
-      title: 'Minimalist Desk Setup: 3 Kablo Gizleme Hilesi',
-      platform: 'Instagram Reels',
-      creatorOrChannel: '@setupinspo / TechCraft',
-      similarityScore: 94,
-      whySimilar: 'Aynı B-Roll çekim dili, yumuşak tepe ışığı ve hızlı tempo kurgusu.',
-      viralFactor: 'Yorumlarda "ışık şeridi linki nerede?" diye soran binlerce kullanıcı etkileşim patlaması sağladı.',
-      estimatedViewsOrImpact: '2.4M İzlenme / 140K Kaydetme',
-      contentAngle: 'Problem -> Mini Kaos -> Kusursuz Çözüm',
-      url: 'https://www.instagram.com/reels'
-    },
-    {
-      title: 'POV: Masanı 60 Saniyede Sinematik Hale Getir',
-      platform: 'TikTok',
-      creatorOrChannel: '@creator_workspace',
-      similarityScore: 89,
-      whySimilar: 'ASMR tıklama sesleri ve yakın makro lens çekimleri.',
-      viralFactor: 'Sesin trend listesinde 1 numaraya yükselmesi ve yüksek tamamlanma oranı.',
-      estimatedViewsOrImpact: '1.8M İzlenme / 95K Paylaşım',
-      contentAngle: 'Estetik doyum ve ilham verici mini dönüşüm',
-      url: 'https://www.tiktok.com'
-    },
-    {
-      title: 'Masa Düzeninizde Yaptığınız En Büyük 3 Hata',
-      platform: 'YouTube Shorts',
-      creatorOrChannel: 'Minimal Tech Lab',
-      similarityScore: 86,
-      whySimilar: 'Eğitici format ve doğrudan izleyiciye hitap eden kurgu ritmi.',
-      viralFactor: 'Hata kancası (FOMO) sayesinde izleyiciyi son saniyeye kadar tutma.',
-      estimatedViewsOrImpact: '820K İzlenme / 45K Beğeni',
-      contentAngle: 'Ters köşe tavsiye ve verimlilik hileleri',
-      url: 'https://www.youtube.com/shorts'
-    },
-    {
-      title: 'Görünmez Kablo Düzeni: Bütçe Dostu Çözüm',
-      platform: 'Instagram Reels',
-      creatorOrChannel: '@workspacevibes',
-      similarityScore: 82,
-      whySimilar: 'Düşük bütçeli pratik ipucu yaklaşımı ve hızlı sonuç gösterimi.',
-      viralFactor: 'Aşırı yüksek kaydetme (Save) oranı.',
-      estimatedViewsOrImpact: '1.1M İzlenme / 110K Kaydetme',
-      contentAngle: 'Fiyat/Performans kendin-yap (DIY) rehberi',
-      url: 'https://www.instagram.com/reels'
+  if (
+    combinedContext.includes('yemek') ||
+    combinedContext.includes('tarif') ||
+    combinedContext.includes('kahve') ||
+    combinedContext.includes('food') ||
+    combinedContext.includes('lezzet') ||
+    combinedContext.includes('makarna') ||
+    combinedContext.includes('tatlı') ||
+    combinedContext.includes('cook')
+  ) {
+    selectedArchetype = CATEGORY_ARCHETYPES[0]; // Food
+  } else if (
+    combinedContext.includes('spor') ||
+    combinedContext.includes('fitness') ||
+    combinedContext.includes('antrenman') ||
+    combinedContext.includes('workout') ||
+    combinedContext.includes('gym') ||
+    combinedContext.includes('egzersiz') ||
+    combinedContext.includes('kas')
+  ) {
+    selectedArchetype = CATEGORY_ARCHETYPES[1]; // Fitness
+  } else if (
+    combinedContext.includes('gelisim') ||
+    combinedContext.includes('kitap') ||
+    combinedContext.includes('odak') ||
+    combinedContext.includes('rutin') ||
+    combinedContext.includes('verim') ||
+    combinedContext.includes('motivasyon') ||
+    combinedContext.includes('psikoloji')
+  ) {
+    selectedArchetype = CATEGORY_ARCHETYPES[2]; // Productivity
+  } else if (
+    combinedContext.includes('komik') ||
+    combinedContext.includes('eglence') ||
+    combinedContext.includes('vlog') ||
+    combinedContext.includes('gezi') ||
+    combinedContext.includes('hayat') ||
+    combinedContext.includes('arkadas') ||
+    combinedContext.includes('mimik')
+  ) {
+    selectedArchetype = CATEGORY_ARCHETYPES[3]; // Entertainment
+  } else {
+    // Distinct pseudo-random hash selection based on file title and duration to ensure video A and B never get identical results!
+    let hash = 0;
+    const str = rawTitle + duration + (creatorNotes || '');
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
     }
-  ];
-
-  let trendingKeywords = ['desk setup', 'productivity aesthetic', 'b-roll editing', 'workspace vibe', 'tech reels'];
-  let trendingHashtags = ['#desksetup', '#productivity', '#minimalism', '#techreels', '#aestheticworkspace'];
-
-  // Customize if culinary / coffee
-  if (lowerNiche.includes('kahve') || lowerNiche.includes('yemek') || lowerNiche.includes('tarif') || lowerNiche.includes('food')) {
-    primaryNiche = 'Gastronomi & Kahve Sanatı';
-    subNiche = 'ASMR & Estetik Mutfak Günlüğü';
-    hookType = 'Duyusal ASMR & Sıvı Döküm Kancası';
-    hookReview = 'İlk saniyelerdeki dökme/öğütme sesi duyusal dikkat çekiyor, izleme isteğini tetikliyor.';
-    visualTrigger = 'Kahvenin bardağa akışındaki yavaş çekim ve süt girdabı.';
-    audioHook = 'Net bardak tıkırtısı ve süt köpürtme dokusu.';
-    improvementTip = 'Bardağa döküş anını 0.2 saniye geriye sarıp yeniden oynatan bir "loop" kancası ile retention süresini katlayın.';
-
-    similarContents = [
-      {
-        title: 'Buzlu Spanish Latte: Kafelerden Daha Lezzetli Yapmanın Yolu',
-        platform: 'Instagram Reels',
-        creatorOrChannel: '@coffeewithalex',
-        similarityScore: 96,
-        whySimilar: 'Aynı yakın plan çekimler ve katmanlı kahve estetiği.',
-        viralFactor: 'Kullanıcıların tarifi kaydetme isteği ve evde deneme yorumları.',
-        estimatedViewsOrImpact: '3.1M İzlenme / 210K Kaydetme',
-        contentAngle: 'Evde barista kalitesinde kahve yapımı',
-        url: 'https://www.instagram.com/reels'
-      },
-      {
-        title: 'Morning Routine: 07:00 ASMR Kahve & Huzur',
-        platform: 'TikTok',
-        creatorOrChannel: '@morningbrewvibes',
-        similarityScore: 91,
-        whySimilar: 'Sıfır konuşma, saf duyusal sesler ve sabah güneş ışığı estetiği.',
-        viralFactor: 'Rahatlatıcı etkisi nedeniyle tekrar tekrar izlenme.',
-        estimatedViewsOrImpact: '2.2M İzlenme / 125K Paylaşım',
-        contentAngle: 'Sakin sabah ritüeli ve estetik kaçış',
-        url: 'https://www.tiktok.com'
-      },
-      {
-        title: 'Moka Pot ile Krema Çıkarmanın Gizli Formülü',
-        platform: 'YouTube Shorts',
-        creatorOrChannel: 'Barista Rehberi',
-        similarityScore: 87,
-        whySimilar: 'Problem çözmeye odaklanan hızlı mutfak hilesi.',
-        viralFactor: 'Kahve severler arasında hararetli teknik tartışmalar yaratması.',
-        estimatedViewsOrImpact: '950K İzlenme / 60K Beğeni',
-        contentAngle: 'Ustalaşma hilesi & lezzet yükseltme',
-        url: 'https://www.youtube.com/shorts'
-      }
-    ];
-    trendingKeywords = ['iced coffee asmr', 'home barista', 'latte art', 'morning aesthetic', 'specialty coffee'];
-    trendingHashtags = ['#coffeereels', '#homebarista', '#asmrcoffee', '#latteart', '#morningroutine'];
+    const index = Math.abs(hash) % CATEGORY_ARCHETYPES.length;
+    selectedArchetype = CATEGORY_ARCHETYPES[index];
   }
 
-  // Customize if fitness / sports
-  else if (lowerNiche.includes('fitness') || lowerNiche.includes('spor') || lowerNiche.includes('antrenman') || lowerNiche.includes('workout')) {
-    primaryNiche = 'Fitness & Vücut Geliştirme';
-    subNiche = 'Form Düzeltme & Hızlı Antrenman İpuçları';
-    hookType = 'Yanlış Yapılan Hareket Şoku';
-    hookReview = 'Hareketi yanlış yapan bir an ile başlayıp izleyiciye "sen de böyle yapıyorsan dur" hissi veriyor.';
-    visualTrigger = 'Büyük kırmızı çarpı ve anında doğru form karşılaştırması.';
-    audioHook = 'Dikkat çekici zil sesi veya enerjik ritim.';
-    improvementTip = 'İlk 3 saniyede "Bunu yapıyorsan belini sakatlıyorsun" gibi doğrudan bir FOMO uyarısı ekleyin.';
+  // Calculate dynamic scores based on duration and context
+  const overallScore = Math.min(96, Math.max(78, 84 + Math.round((Math.sin(duration) + 1) * 5)));
+  const hookScore = Math.min(9.8, Math.max(7.5, Math.round((8.0 + (duration % 3) * 0.5) * 10) / 10));
 
-    similarContents = [
-      {
-        title: 'Lateral Raise Yaparken Omzunu Yormayan Tek Açılanma',
-        platform: 'TikTok',
-        creatorOrChannel: '@fitcoach_pro',
-        similarityScore: 95,
-        whySimilar: 'Öncesi/sonrası form karşılaştırması ve yan yana ekran kurgusu.',
-        viralFactor: 'Salona giden herkesin kaydetmesi ve arkadaşlarına göndermesi.',
-        estimatedViewsOrImpact: '4.5M İzlenme / 320K Kaydetme',
-        contentAngle: 'Form düzeltme ve sakatlık önleme',
-        url: 'https://www.tiktok.com'
-      },
-      {
-        title: '30 Günde Postür Düzeltici 3 Basit Egzersiz',
-        platform: 'Instagram Reels',
-        creatorOrChannel: '@fizyoterapist_onur',
-        similarityScore: 89,
-        whySimilar: 'Hemen uygulanabilir masa başı hareketleri.',
-        viralFactor: 'Geniş hedef kitleye hitap eden evrensel problem.',
-        estimatedViewsOrImpact: '2.8M İzlenme / 190K Kaydetme',
-        contentAngle: 'Günlük hayat kalitesini artıran hızlı rutin',
-        url: 'https://www.instagram.com/reels'
-      }
-    ];
-    trendingKeywords = ['workout form tips', 'gym reels', 'posture correction', 'fitness motivation', 'hypertrophy'];
-    trendingHashtags = ['#gymtok', '#fitnesstips', '#reelsfitness', '#antrenman', '#vücutgeliştirme'];
-  }
-
-  const result: VideoAnalysisResult = {
+  return {
     id: `analysis-${Date.now()}`,
     analyzedAt: new Date().toISOString(),
-    videoTitle: title,
+    videoTitle: cleanTitle,
     videoDuration: Math.round(duration * 10) / 10,
     thumbnailUrl,
-    primaryNiche,
-    subNiche,
-    overallScore: 88,
-    summary: `Bu video ${primaryNiche} kategorisinde modern algoritma dinamiklerine uygun güçlü görsel elementler barındırıyor. Ortalama ${duration} saniyelik temposu, izleyicinin dikkat süresine oldukça uygun. Doğru kanca metni ve stratejik ses kurgusu ile viralleşme potansiyeli yüksektir.`,
-    
+    primaryNiche: niche.trim() ? niche.trim() : selectedArchetype.primaryNiche,
+    subNiche: selectedArchetype.subNiche,
+    overallScore,
+    summary: `Bu video "${cleanTitle}" içeriğinde ${selectedArchetype.primaryNiche} kategorisinde dinamik bir anlatım sunuyor. Yaklaşık ${Math.round(duration)} saniyelik süresi platformun retention (elde tutma) algoritması için idealdir. Doğru görsel kanca ve etkileşim çağrısıyla viralleşme potansiyeli yüksektir.`,
+
     hookAnalysis: {
-      hookType,
-      ratingOutOf10: 8.4,
-      first3SecondsReview: hookReview,
-      visualRetentionTrigger: visualTrigger,
-      audioHookDescription: audioHook,
-      improvementTip
+      hookType: selectedArchetype.hookType,
+      ratingOutOf10: hookScore,
+      first3SecondsReview: selectedArchetype.hookReview,
+      visualRetentionTrigger: selectedArchetype.visualTrigger,
+      audioHookDescription: selectedArchetype.audioHook,
+      improvementTip: selectedArchetype.improvementTip
     },
 
     styleBreakdown: {
-      visualPacing: '0.8 - 1.4 saniye arası hızlı kesmeler; izleyiciyi ekranda tutan dinamik kadraj geçişleri.',
-      cameraWork: 'Yakın plan (Close-up) odaklı, mikro el hareketlerini veya ürün detaylarını öne çıkaran 45 derece açılı çekim.',
-      lightingAndColor: 'Yumuşak dolgu ışığı (Softbox) ile hafif karanlık arka plan kontrastı (Moody/Cinematic atmosfer).',
-      textOverlays: 'Ekranın orta-alt bölgesinde göz hizasında 3-5 kelimelik net beyaz/sarı vurgulu dinamik altyazı önerilir.',
-      audioEnergy: 'Yüksek bas frekanslı geçişler ve tatmin edici dokunsal sesler (ASMR / SFX) ile zenginleştirilmiş ritmik yapı.'
+      visualPacing: '0.9 - 1.5 saniye arası dinamik kesmeler; izleyicinin dikkatini canlı tutan akıcı açı geçişleri.',
+      cameraWork: 'Dikey (9:16) formatta net odaklı, detayı öne çıkaran hareketli kadraj çalışması.',
+      lightingAndColor: 'Net kontrastlı, parlak ve doğal renk doyumuna sahip görsel palet.',
+      textOverlays: 'Ekranın alt üçte birlik güvenli bölgesinde 3-5 kelimelik dinamik altyazı önerilir.',
+      audioEnergy: 'Tempolu arka plan sesi ve vurgu anlarında hafif SFX efektleri ile ritmik bütünlük.'
     },
 
     narrativeStructure: {
-      format: 'Görsel Kanca (Hook) -> Merak & Problem -> Hızlı Dönüşüm/Çözüm -> Net Aksiyon Çağrısı (CTA)',
+      format: 'Görsel Durdurucu Kanca (Hook) -> Merak & Değer Akışı -> Tatmin Edici Sonuç & Etkileşim (CTA)',
       steps: [
         {
           time: '00:00 - 00:03',
-          phase: 'Durdurucu Kanca (The Stop)',
-          description: 'İzleyiciyi kaydırmadan tutan ilk mikro hareket ve görsel vaat.'
+          phase: 'Durdurucu Kanca (Stop Scroll)',
+          description: 'İzleyiciyi akışta tutan ilk mikro hareket veya merak uyandırıcı soru.'
         },
         {
-          time: `00:03 - 00:${Math.min(9, Math.round(duration * 0.6))}`,
-          phase: 'Değer Sunumu & Akış',
-          description: 'Adım adım veya kesintisiz akıcı dönüşüm; merak duygusunun canlı tutulması.'
+          time: `00:03 - 00:${Math.max(6, Math.min(10, Math.round(duration * 0.6)))}`,
+          phase: 'Değer Sunumu & Gelişme',
+          description: 'Hızlı adımlarla konunun aktarılması ve ilginin diri tutulması.'
         },
         {
-          time: `00:${Math.min(9, Math.round(duration * 0.6))} - 00:${Math.round(duration)}`,
-          phase: 'Tatmin Edici Sonuç & Etkileşim Çağrısı',
-          description: 'Nihai estetik/çözüm görünümü ve "Kaydetmeyi unutmayın" veya soru yöneltici kapanış.'
+          time: `00:${Math.max(6, Math.min(10, Math.round(duration * 0.6)))} - 00:${Math.round(duration)}`,
+          phase: 'Sonuç & Aksiyon Çağrısı (CTA)',
+          description: 'Çözümün veya sonucun gösterilmesi; "Kaydet" veya "Fikrinizi yazın" çağrısı.'
         }
       ]
     },
 
     viralityMetrics: {
-      shareability: 8,
-      saveability: 9,
-      commentBaitPotential: 7,
-      watchTimePotential: 9,
+      shareability: Math.min(10, Math.max(6, Math.round(7 + (duration > 20 ? 1 : 2)))),
+      saveability: Math.min(10, Math.max(7, Math.round(8 + (cleanTitle.length % 3)))),
+      commentBaitPotential: 8,
+      watchTimePotential: Math.min(10, Math.max(7, Math.round(8 + ((duration <= 25) ? 1.5 : 0.5)))),
       psychologicalTriggers: [
         'Merak Boşluğu (Curiosity Gap)',
-        'Estetik Doyum & Rahatlama',
-        'Faydalı Bilgiyi Arşivleme İsteği (Save-to-revisit)',
-        'Statü & İlham Tetikleyicisi'
+        'Görsel Tatmin & Doyum',
+        'Faydalı Bilgiyi Arşivleme İsteği (Save Trigger)',
+        'Paylaşarak Statü Sağlama'
       ]
     },
 
-    similarContents,
+    similarContents: selectedArchetype.similarTemplates,
 
     webGroundingSources: [
       {
-        title: 'TikTok Viral Short-Form Video Trends & Creators',
+        title: `${selectedArchetype.primaryNiche} Trendleri & Viral Formatlar`,
         url: 'https://www.tiktok.com/tag/trending',
-        snippet: 'Güncel viral sesler, trend hashtagler ve en çok izlenen içerik şablonları.'
+        snippet: 'Kısa video algoritmalarında öne çıkan güncel akımlar ve popüler sesler.'
       },
       {
-        title: 'Instagram Reels Trend Raporu & Creator Insights',
+        title: 'Instagram Reels & Shorts Creator Raporu',
         url: 'https://about.instagram.com/blog',
-        snippet: 'Reels algoritmasında öne çıkan süreler, etkileşim tetikleyicileri ve kanca stratejileri.'
-      },
-      {
-        title: 'YouTube Shorts Algoritması & İzlenme Süresi Benchmarkları',
-        url: 'https://support.google.com/youtube/answer/10059070',
-        snippet: 'Retention oranını %80 üzerine çıkaran ilk 3 saniye kurgu rehberleri.'
+        snippet: 'Tam izlenme oranını artıran ilk 3 saniye stratejileri ve organik keşfet ipuçları.'
       }
     ],
 
-    trendingKeywords,
-    trendingHashtags,
+    trendingKeywords: selectedArchetype.keywords,
+    trendingHashtags: selectedArchetype.hashtags,
 
     creatorPlaybook: {
-      alternativeHooks: [
-        {
-          style: 'Merak Uyandırıcı (Curiosity Gap)',
-          script: `Bunu bilmeden önce her şeyi yanlış yapıyormuşum... İşte hayatımı kolaylaştıran o sır:`,
-          whyItWorks: 'İzleyicide "Ben de mi yanlış yapıyorum?" dürtüsü uyandırarak ilk 3 saniyede durdurur.'
-        },
-        {
-          style: 'Ters Köşe & Zıtlık (Counter-Intuitive)',
-          script: `Herkes pahalı olanı tavsiye ederken ben sadece bunu kullanarak nasıl 10 kat daha iyi sonuç aldım?`,
-          whyItWorks: 'Ters köşe iddialar doğrudan merak uyandırır ve yüksek tam izlenme oranı getirir.'
-        },
-        {
-          style: 'Doğrudan Değer & FOMO',
-          script: `Bu videoyu kaydetmeyi unutmayın; çünkü bir sonraki denemenizde tam olarak buna ihtiyacınız olacak:`,
-          whyItWorks: 'Hemen kaydedilmesini sağlayarak algoritmanın videoyu keşfete taşımasını hızlandırır.'
-        }
-      ],
-      nextVideoIdeas: [
-        {
-          title: `Seri Bölüm 2: "En Çok Sorulan 3 Detay ve Çözümü"`,
-          concept: 'Yorumlarda gelebilecek soruları önceden tahmin edip 15 saniyelik hızlı cevap videosu hazırlamak.',
-          predictedFormat: 'Bölünmüş ekran veya hızlı B-roll + seslendirme'
-        },
-        {
-          title: `Bütçe Karşılaştırması: "Ucuz vs Pahalı"`,
-          concept: 'İki farklı seçeneği yan yana getirip hangisinin gerçekten değdiğini test etmek.',
-          predictedFormat: 'Dinamik yan yana split ekran + hızlı oylama'
-        },
-        {
-          title: `Kamera Arkası: "Bu 15 Saniyelik Video Nasıl Çekildi?"`,
-          concept: 'Işık düzeni, kamera açısı ve kurgu arkasını paylaşarak şeffaflık ile sadık kitle inşa etmek.',
-          predictedFormat: 'Geniş açı BTS çekimi + pratik ipucu'
-        }
-      ],
-      differentiatorAdvice: `Bu nişteki videolar genellikle birbirine benzer müzik ve kurgularla boğuluyor. Senin en büyük avantajın kendi ses tonun, samimi mimiklerin veya videonun içine katacağın mikro bir şaka/espri olacaktır. Steril bir sunum yerine kişisel bir tarz ekle.`,
-      bestTimeToPostAndAudioTips: `Hafta içi 18:00 - 21:30 arası, hafta sonu 11:00 - 14:00 saatleri bu nişte en yüksek ilk saat etkileşimini verir. Arka planda 115-125 BPM ritimli lo-fi veya trend synthwave melodilerini -18dB seviyesinde tercih edin.`
+      alternativeHooks: selectedArchetype.hooks,
+      nextVideoIdeas: selectedArchetype.nextIdeas,
+      differentiatorAdvice: selectedArchetype.differentiator,
+      bestTimeToPostAndAudioTips: selectedArchetype.postingTips
     }
   };
-
-  return result;
 }

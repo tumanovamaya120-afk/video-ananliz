@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Custom utility styles for video preview and markdown */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-body strong {
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.markdown-body p {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}

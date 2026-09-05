@@ -1,0 +1,6 @@
+{
+  "name": "TrendLens - Influencer Video & İçerik Keşfi",
+  "description": "Yüklenen videoları analiz ederek internette benzer ve trend içerikleri tespit eden yapay zeka destekli influencer keşif platformu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

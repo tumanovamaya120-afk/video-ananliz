@@ -255,46 +255,49 @@ JSON şeması:
     parts.push({ text: promptText });
 
     let response: any = null;
-    let usedModel = 'gemini-3.8-flash';
+    let usedModel = 'gemini-3.1-flash-lite';
     let quotaHit = false;
 
-    // Primary: gemini-3.8-flash (Top-tier vision reasoning & multimodal understanding)
+    // Primary: gemini-3.1-flash-lite (Ultra-fast multimodal vision reasoning, highest availability)
     try {
       response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: { parts },
         config: {
+          responseMimeType: 'application/json',
           temperature: 0.7,
         },
       });
-      usedModel = 'gemini-3.8-flash';
+      usedModel = 'gemini-3.1-flash-lite';
     } catch (err: any) {
       if (isQuotaError(err)) quotaHit = true;
-      console.warn('gemini-3.8-flash denemesi başarısız, gemini-flash-latest deneniyor:', err?.message || err);
-      // Secondary: gemini-flash-latest
+      console.warn('gemini-3.1-flash-lite denemesi başarısız, gemini-3.8-flash deneniyor:', err?.message || err);
+      // Secondary: gemini-3.8-flash
       try {
         response = await ai.models.generateContent({
-          model: 'gemini-flash-latest',
+          model: 'gemini-3.8-flash',
           contents: { parts },
           config: {
+            responseMimeType: 'application/json',
             temperature: 0.7,
           },
         });
-        usedModel = 'gemini-flash-latest';
+        usedModel = 'gemini-3.8-flash';
         quotaHit = false;
       } catch (err2: any) {
         if (isQuotaError(err2)) quotaHit = true;
-        console.warn('gemini-flash-latest denemesi başarısız, gemini-3.1-flash-lite deneniyor:', err2?.message || err2);
-        // Tertiary: gemini-3.1-flash-lite
+        console.warn('gemini-3.8-flash denemesi başarısız, gemini-flash-latest deneniyor:', err2?.message || err2);
+        // Tertiary: gemini-flash-latest
         try {
           response = await ai.models.generateContent({
-            model: 'gemini-3.1-flash-lite',
+            model: 'gemini-flash-latest',
             contents: { parts },
             config: {
+              responseMimeType: 'application/json',
               temperature: 0.7,
             },
           });
-          usedModel = 'gemini-3.1-flash-lite';
+          usedModel = 'gemini-flash-latest';
           quotaHit = false;
         } catch (err3: any) {
           if (isQuotaError(err3)) quotaHit = true;

@@ -491,31 +491,40 @@ JSON şeması:
     parts.push({ text: promptText });
 
     let response: any = null;
-    let usedModel = 'gemini-3.8-flash';
+    let usedModel = 'gemini-3.1-flash-lite';
 
     try {
       response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: { parts },
-        config: { temperature: 0.7 },
+        config: {
+          responseMimeType: 'application/json',
+          temperature: 0.7,
+        },
       });
-      usedModel = 'gemini-3.8-flash';
+      usedModel = 'gemini-3.1-flash-lite';
     } catch {
       try {
         response = await ai.models.generateContent({
-          model: 'gemini-flash-latest',
+          model: 'gemini-3.8-flash',
           contents: { parts },
-          config: { temperature: 0.7 },
+          config: {
+            responseMimeType: 'application/json',
+            temperature: 0.7,
+          },
         });
-        usedModel = 'gemini-flash-latest';
+        usedModel = 'gemini-3.8-flash';
       } catch {
         try {
           response = await ai.models.generateContent({
-            model: 'gemini-3.1-flash-lite',
+            model: 'gemini-flash-latest',
             contents: { parts },
-            config: { temperature: 0.7 },
+            config: {
+              responseMimeType: 'application/json',
+              temperature: 0.7,
+            },
           });
-          usedModel = 'gemini-3.1-flash-lite';
+          usedModel = 'gemini-flash-latest';
         } catch {
           // Handled by fallback below
         }

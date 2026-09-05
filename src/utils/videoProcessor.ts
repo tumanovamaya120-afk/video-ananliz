@@ -13,7 +13,9 @@ export async function extractVideoKeyframes(
 }> {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
-    video.crossOrigin = 'anonymous';
+    if (typeof source === 'string' && source.startsWith('http')) {
+      video.crossOrigin = 'anonymous';
+    }
     video.muted = true;
     video.playsInline = true;
     video.preload = 'auto';
